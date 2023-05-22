@@ -33,7 +33,11 @@ def website(url):
 # Function to track changes in the websites, this will run in threads
 def track_url(url):
     prev = website(url)
-    while True:
+    flag = True
+    while flag:
+        with map_lock:
+            if url not in url_map:
+                flag = False
         curr = website(url)
         if curr!=prev:
             print("Change detected in ", url)
@@ -41,18 +45,7 @@ def track_url(url):
                 queue.put(url)
         time.sleep(2)
         prev = curr
-
-# Endpoint to constantly check the server for updates       
-@app.route('/check', methods=['POST'])
-def updater():
-    with queue_lock:
-        if not queue.empty():
-            url = queue.get()
-            return url
-        else:
-            return 'NA'
-
-
+# Endpoint to add link and create thread for link monitoring
 @app.route('/add', methods=['POST'])
 def add_url():
     req = request.get_data(as_text=True)
@@ -72,7 +65,29 @@ def add_url():
             #launch thread here
             thread = threading.Thread(target=track_url, args=(url,))
             thread.start()
-            return str(urlID)  
+            return str(urlID) 
+
+# Endpoint to constantly check the server for updates       
+@app.route('/check', methods=['POST'])
+def updater():
+    with queue_lock:
+        if not queue.empty():
+            url = queue.get()
+            return url
+        else:
+            return 'NA'
+
+# Endpoint to remove links from monitoring and kill thread
+@app.route('/remove', methods=['POST'])
+def remove():
+    req = request.get_data(as_text=True)
+    body = req.splitlines()
+    url = body[0]
+    with map_lock:
+        del url_map[url]
+    return ''
+
+ 
 
 if __name__ == '__main__':
     port = 8080  # Set your desired port value here

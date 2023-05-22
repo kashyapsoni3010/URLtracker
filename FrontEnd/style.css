@@ -1,12 +1,17 @@
+.header{
+    text-align: center;
+}
 #container {
     display: flex; /* Use flexbox layout */
     flex-direction: row; /* Arrange children in a row */
 }
 .child{
-    width: 300px;
+    text-align: center;
+    width: 50%;
     margin-right: 10px;
 }
 #urlList {
+    
     display: flex; /* Use flexbox layout */
     flex-direction: column; /* Arrange children in a row */
 }
