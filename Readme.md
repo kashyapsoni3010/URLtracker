@@ -1,6 +1,9 @@
 Project structure:
+
 Frontend: HTML CSS
+
 API: Javascript
+
 Server: HTTP server in python using Flask
 
 Frontend triggers functions of the API and API sends requests to the appropriate endpoint of the server. Server performs necessary operations and returns the response back to API which in turn performs DOM manipulation to display the results
