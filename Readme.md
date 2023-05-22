@@ -1,3 +1,10 @@
+Project structure:
+Frontend: HTML CSS
+API: Javascript
+Server: HTTP server in python using Flask
+
+Frontend triggers functions of the API and API sends requests to the appropriate endpoint of the server. Server performs necessary operations and returns the response back to API which in turn performs DOM manipulation to display the results
+
 Adding link on frontend
 ![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/31b485f4-5563-4976-9561-f17521da8dce)
 Adding link on the server for monitoring
