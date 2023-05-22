@@ -1,5 +1,11 @@
-![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/2a1e7c1e-6f6c-4de3-89c1-ae413c076de8)
-![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/63b40680-43ea-4bc9-8da3-b9b3cc0d3734)
-![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/eacbb384-ecc6-4ec6-a2fb-3acc909bb5e2)
-![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/930f7715-c7aa-40c4-a3a0-45069e4b6379)
-Duplicate Link detection
+Adding link on frontend
+![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/31b485f4-5563-4976-9561-f17521da8dce)
+Adding link on the server for monitoring
+![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/ba8604f8-812d-4342-80ca-5daa1010d3e5)
+Monitoring multiple links simultaneously with multithreading
+![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/33103673-f132-42e5-978d-dbe8d8f86db7)
+Detecting and displaying changes
+![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/66dd50dc-5fd8-4089-bb73-8ceac4b985fb)
+Duplicate link handling
+![image](https://github.com/kashyapsoni3010/URLtracker/assets/92846525/8fa2c4e7-c742-4fb1-a2f5-93949999e489)
+
