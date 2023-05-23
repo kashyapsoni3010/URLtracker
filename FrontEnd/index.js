@@ -1,4 +1,4 @@
-// var hashmap = {};
+var hashmap = {};
 var counter = 0;
 function handleSubmit(event) {
     event.preventDefault(); 
@@ -24,14 +24,19 @@ function addURL(link){
         // console.log(result);
         if (result=="ERROR"){
             //display error message
-            alert("Link is being monitored")
             console.log("ERROR");
+            alert("Invalid URL")
+        }
+        else if(result == "DUPLICATE"){
+            alert("Link is being monitored");
         }
         else{
             //call function fopr dom manipulation on the given link
             // Console.log("OKAY");
-            let id = parseInt(result);
-            
+            splitStr = result.split("\n");
+            console.log(splitStr[1]);
+            let id = parseInt(splitStr[1]);
+            hashmap[link] = id;
             //function for dom manipulation
             addElement(link, id);
         }
@@ -63,23 +68,17 @@ function start(){
 }
 setInterval(start, 2000);
 
-function remove(event){
-    event.preventDefault();
-    var form = event.target;
-    var link = form.elements.url.value;
+function remove(url){
     fetch('http://127.0.0.1:8080/remove', {
         method: 'POST',
         headers: {
             'Content-Type': 'text/plain',
         },
-        body: link
+        body: url
     })
     .then(response => response.text())
     .then(result => {
-        if (result!="NA"){
-            counter++;
-            changeUpdate(result, counter);
-        }
+
     })
     .catch(error => {
         console.error(error);
@@ -88,28 +87,47 @@ function remove(event){
 
 
 function changeUpdate(url, id){
-    var urlList = document.getElementById('changes');
+    var urlList = document.getElementById('list');
     var name = "link-"+id;
     var box = document.createElement(name);
     box.textContent = url;
     urlList.appendChild(box);
+    var firstChild = urlList.firstChild;
+    urlList.insertBefore(box, firstChild);
 }
 function addElement(url, id){
-    var urlList = document.getElementById('urlList');
-    var name = "link-"+id;
-    var box = document.createElement(name);
-    box.textContent = url;
+    var form = document.createElement("form");
+    form.id = "link-"+id;
+    form.className = "links"
+    var left = document.createElement("div");
+    left.className = "components";
+    left.textContent = url;
+    // var urlDisplay = document.createElement("p");
+    // urlDisplay.textContent = url;
+    // left.appendChild(urlDisplay);
+    var right = document.createElement("div");
+    right.className = "components";
     var button = document.createElement("button");
-    button.textContent = "Remove Link";
-    button.addEventListener("click", function() {
-        removeLink(name);
-        // this name is used as id in removelink function to find the link
-    });
-    box.appendChild(button);
-    urlList.appendChild(box);
-    // var link = document.createElement(url+'link');
+    button.textContent = "Remove";
+    button.onclick = function() {
+        handleRemove(form.id, url);
+    };
+    right.appendChild(button);
+    form.appendChild(left);
+    form.appendChild(right);
+    var container = document.getElementById("urlList");
+    container.appendChild(form);
+    // Post a req to remove the url from server()
+    // 
 }
-function removeLink(id){
-    var element = document.getElementById(id);
-    element.remove();
+function handleRemove(name, url){
+    console.log("Sending remove req");
+    remove(url);
+    // var name = "link-2";
+    // alert("name of ID "+name);
+    var divElement = document.getElementById(name);
+    if (divElement) {
+        // Remove the div element from its parent
+        divElement.remove(divElement);
+    }
 }

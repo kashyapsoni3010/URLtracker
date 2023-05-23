@@ -15,7 +15,14 @@
     display: flex; /* Use flexbox layout */
     flex-direction: column; /* Arrange children in a row */
 }
-#changes {
+#list {
     display: flex; /* Use flexbox layout */
     flex-direction: column; /* Arrange children in a row */
+}
+.links {
+    display: flex; /* Use flexbox layout */
+    flex-direction: row; /* Arrange children in a row */
+}
+.components{
+
 }

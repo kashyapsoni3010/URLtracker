@@ -11,7 +11,7 @@
 <body>
     <div class="header">
         <h1>URL Tracker</h1>
-        <form onsubmit="handleSubmit(event)">
+        <form id = "main" onsubmit="handleSubmit(event)">
             <h2>Enter new URL </h2>
             <input type="text" id="url" name="url" required><br>
             <button type="submit">ADD</button>
@@ -23,6 +23,7 @@
         </div>
         <div class="child" id="changes">
             <h2>List of changes</h2>
+            <div id="list"></div>
         </div>
     </div>
 </body>

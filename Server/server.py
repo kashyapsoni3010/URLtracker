@@ -19,19 +19,19 @@ url_map = {}
 map_lock = threading.Lock()
 
 # Function to retreive text data from the url
-
-
 def website(url):
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Raise an exception if the request was not successful
-        return response.text  # Return the website content
+        # Raise an exception if the request was not successful
+        response.raise_for_status()  
+        # Return the website content
+        return response.text  
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching website content: {e}")
-        return None
+        return "ERROR"
     
 # Function to track changes in the websites, this will run in threads
-def track_url(url):
+def track_url(url, id):
+    print("started tracking: ", url)
     prev = website(url)
     flag = True
     while flag:
@@ -42,30 +42,36 @@ def track_url(url):
         if curr!=prev:
             print("Change detected in ", url)
             with queue_lock:
-                queue.put(url)
+                pair = (url, id)
+                queue.put(pair)
         time.sleep(2)
         prev = curr
+    print("Ended tracking ", url)
+
+
 # Endpoint to add link and create thread for link monitoring
 @app.route('/add', methods=['POST'])
 def add_url():
     req = request.get_data(as_text=True)
-    body = req.splitlines()
-    url = body[0]
-    # Add URL to the hashset
-    # urlID=urlID+1
+    url = req
+    # Add URL to the hashmap
     with map_lock:
         # time.sleep(5)
         if url in url_map:
+            return 'DUPLICATE'
+        if website(url)=="ERROR":
             return 'ERROR'
         else:
             global urlID
             urlID+=1
             url_map[url] = urlID
-            print(urlID)
-            #launch thread here
-            thread = threading.Thread(target=track_url, args=(url,))
+            print("added: ",url)
+            #launch thread
+            thread = threading.Thread(target=track_url, args=(url,urlID,))
             thread.start()
-            return str(urlID) 
+            pair = (url, str(urlID))
+            resp = "\n".join(pair)
+            return resp 
 
 # Endpoint to constantly check the server for updates       
 @app.route('/check', methods=['POST'])
@@ -73,7 +79,7 @@ def updater():
     with queue_lock:
         if not queue.empty():
             url = queue.get()
-            return url
+            return url[0]
         else:
             return 'NA'
 
@@ -81,14 +87,13 @@ def updater():
 @app.route('/remove', methods=['POST'])
 def remove():
     req = request.get_data(as_text=True)
-    body = req.splitlines()
-    url = body[0]
+    print("received req to remove ",req)
     with map_lock:
-        del url_map[url]
+        if req in url_map:
+            del url_map[req]
     return ''
 
- 
 
 if __name__ == '__main__':
-    port = 8080  # Set your desired port value here
+    port = 8080 
     app.run(port=port)
