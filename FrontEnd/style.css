@@ -1,6 +1,13 @@
 .header{
     text-align: center;
 }
+.settings{
+    /* margin: auto; */
+    justify-content: center;
+    text-align: center;
+    display: flex; /* Use flexbox layout */
+    flex-direction: row; /* Arrange children in a row */
+}
 #container {
     display: flex; /* Use flexbox layout */
     flex-direction: row; /* Arrange children in a row */
@@ -23,6 +30,8 @@
     display: flex; /* Use flexbox layout */
     flex-direction: row; /* Arrange children in a row */
 }
-.components{
-
+#center{
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }

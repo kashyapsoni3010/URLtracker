@@ -14,8 +14,20 @@
         <form id = "main" onsubmit="handleSubmit(event)">
             <h2>Enter new URL </h2>
             <input type="text" id="url" name="url" required><br>
-            <button type="submit">ADD</button>
+            <button type="submit">Add Link</button>
         </form>
+    </div>
+    <br>
+    <div class="settings">
+        <div id="left">
+            <button onclick="decrease()">Decrease</button>
+        </div>
+        <div id="center">
+            2 Seconds
+        </div>
+        <div id="right">
+            <button onclick="increase()">Increase</button>
+        </div>
     </div>
     <div id="container">
         <div class="child" id="urlList">
@@ -26,5 +38,6 @@
             <div id="list"></div>
         </div>
     </div>
+    
 </body>
 </html>

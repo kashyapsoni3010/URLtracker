@@ -1,5 +1,8 @@
 from flask import Flask, request
 from flask_cors import CORS
+from datetime import datetime
+from diff_match_patch import diff_match_patch
+from bs4 import BeautifulSoup
 import threading
 import requests
 import time
@@ -40,6 +43,9 @@ def track_url(url, id):
                 flag = False
         curr = website(url)
         if curr!=prev:
+            # Call a function to find difference between the websites, pass curr and prev
+            if curr!="ERROR" and prev!="ERROR":
+                differences(prev, curr)
             print("Change detected in ", url)
             with queue_lock:
                 pair = (url, id)
@@ -47,6 +53,27 @@ def track_url(url, id):
         time.sleep(2)
         prev = curr
     print("Ended tracking ", url)
+
+#utility function to find the difference between two versions
+def differences(prev, curr):
+    soup1 = BeautifulSoup(prev, 'html.parser')
+    soup2 = BeautifulSoup(curr, 'html.parser')
+    text1 = soup1.get_text()
+    text2 = soup2.get_text()
+    dmp = diff_match_patch()
+    diffs = dmp.diff_main(text1, text2)
+    dmp.diff_cleanupSemantic(diffs)
+    deleted = ""
+    added = ""
+    result = ""
+    for diff in diffs:
+        if diff[0] == -1:
+            result+="Deleted: "+diff[1]+"\n"
+        if diff[0] == 1:
+            result+="Added: "+diff[1]+"\n"
+    print(result)
+    # print("Added: ", added)
+
 
 
 # Endpoint to add link and create thread for link monitoring
@@ -79,7 +106,10 @@ def updater():
     with queue_lock:
         if not queue.empty():
             url = queue.get()
-            return url[0]
+            current_time = datetime.now().strftime("%m/%d/%Y - %H:%M:%S")
+            time_string = str(current_time)
+            response = url[0]+"|"+time_string
+            return response
         else:
             return 'NA'
 

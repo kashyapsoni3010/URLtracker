@@ -1,5 +1,6 @@
 var hashmap = {};
 var counter = 0;
+var frequency = 2;
 function handleSubmit(event) {
     event.preventDefault(); 
     // Get form data
@@ -48,6 +49,7 @@ function addURL(link){
     });   
 }
 function start(){
+    console.log(frequency);
     fetch('http://127.0.0.1:8080/check', {
         method: 'POST',
         headers: {
@@ -59,14 +61,18 @@ function start(){
     .then(result => {
         if (result!="NA"){
             counter++;
-            changeUpdate(result, counter);
+            splitStr = result.split("|");
+            url = splitStr[0];
+            time = splitStr[1];
+            console.log(result);
+            changeUpdate(url, time, counter);
         }
     })
     .catch(error => {
         console.error(error);
     });
 }
-setInterval(start, 2000);
+setInterval(start, frequency*2000);
 
 function remove(url){
     fetch('http://127.0.0.1:8080/remove', {
@@ -86,11 +92,11 @@ function remove(url){
 }
 
 
-function changeUpdate(url, id){
+function changeUpdate(url, currtime, id){
     var urlList = document.getElementById('list');
     var name = "link-"+id;
     var box = document.createElement(name);
-    box.textContent = url;
+    box.textContent = currtime + "::" + url;
     urlList.appendChild(box);
     var firstChild = urlList.firstChild;
     urlList.insertBefore(box, firstChild);
@@ -130,4 +136,20 @@ function handleRemove(name, url){
         // Remove the div element from its parent
         divElement.remove(divElement);
     }
+}
+function decrease(){
+    frequency++;
+    let updateText = document.getElementById('center');
+    var str = frequency+" Seconds";
+    updateText.textContent = str;
+}
+function increase(){
+    if(frequency==1){
+        alert("Cannot increase the frequency");
+        return;
+    }
+    frequency--;
+    let updateText = document.getElementById('center');
+    var str = frequency+" Seconds";
+    updateText.textContent = str;
 }
